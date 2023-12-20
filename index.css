@@ -3,6 +3,7 @@ html, body {
    padding: 0;
    font-family: 'Rubik', sans-serif;
    background-color: #EEF0F4;
+   user-select: none;
 }
 
 .container {
@@ -38,4 +39,37 @@ button {
    font-size: 20px;
    text-align: center;
    font-family: 'Rubik', sans-serif;
+   transition: background-color, 300ms;
+}
+
+button:hover {
+   background-color: #432000;
+   cursor: pointer;
+}
+
+ul {
+   list-style-type: none;
+   font-size: 20px;
+   text-align: center;
+   font-family: 'Rubik', sans-serif;
+   display: flex;
+   gap:10px;
+   flex-wrap: wrap;
+   padding: 0;
+}
+
+ul li {
+   border-radius: 8px;
+   padding: 10px;
+   background-color: #FFFDF8;
+   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+   flex-grow: 1;
+   color: grey;
+   transition: background-color, 300ms;
+  
+}
+
+ul li:hover {
+   background-color: #FFECC7;
+   cursor: pointer;
 }

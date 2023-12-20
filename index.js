@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js"
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
+import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js"
 
 const appSettings = {
    databaseURL: "https://shopcartcm-default-rtdb.firebaseio.com/"
@@ -13,22 +13,54 @@ const inputFieldEl = document.getElementById("input-field")
 const addButtonEl = document.getElementById("add-button")
 const shoppingList = document.getElementById('shopping-list')
 
+function deleteItem(exactId){
+   remove(exactId)
+}
+
 function addItem(item){
-shoppingList.innerHTML += `<li>${item}</li>`
+   let newLi = document.createElement('li')
+   let itemId = item[0]
+   let itemValue = item[1]
+   newLi.textContent = itemValue
+   newLi.addEventListener('click', ()=> {
+      let exactLocationLi = ref(database, `shoppingList/${itemId}`)
+      deleteItem(exactLocationLi);
+     })
+   shoppingList.append(newLi)
 }
 
 function clearInput(){
    inputFieldEl.value = ''
  }
 
+ function clearShopList(){
+   shoppingList.innerHTML=''
+ }
 
-addButtonEl.addEventListener("click", function() {
-    let inputValue = inputFieldEl.value
+onValue(shopListDB, snapshot => {
+   if(snapshot.exists()) {
 
 
-    push(shopListDB, inputValue)
+  
+      let shoppingListArray = Object.entries(snapshot.val())
+      
+      
+      clearShopList()
+      for(let i = 0; i< shoppingListArray.length; i++){
+         let currentItem = shoppingListArray[i];
+         let currentItemId = currentItem[0];
+         let currentItemValue = currentItem[1];
+         addItem(currentItem)
+      }
 
-    addItem(inputValue);
-    clearInput();
-
-})
+   } else {
+      shoppingList.innerHTML= "Nothing here...yet"
+   }
+   })
+   
+   addButtonEl.addEventListener("click", () => {
+      let inputValue = inputFieldEl.value
+      push(shopListDB, inputValue)
+      clearInput();
+      
+   })
